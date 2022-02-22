@@ -1,0 +1,83 @@
+//AUTHOR: Stephen A. Prine
+//COURSE: CPT187
+/*PURPOSE:
+ * this part of the program takes the user/customers individual item orders and stores them for the final report when 
+ * they are finished. It keeps track of the item identification number, item name, item price, the quantity purchased, and
+ * each order cost. 
+ */
+//START DATE: 2/16/22
+
+package edu.cpt187.prine.exercise6;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+//Start WriteOrder class
+public class WriteOrder 
+{
+	//declare and initialize variables
+	private boolean fileFoundFlag = false;
+	private String masterFileName = "";
+	private int recordCount = 0;
+
+	//constructor
+
+	//non default constructor
+	public WriteOrder(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;
+	}//END of non default constructor
+
+	//setters
+
+	//Start WriteOrder setter
+	public void setWriteOrder(int borrowedItemID, String borrowedItemName, double borrowedItemPrice, 
+			int borrowedQuantity, double borrowedOrderCost)
+	{
+		//try block
+		try
+		{
+			//instantiation statement for PrintWriter
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, true));
+
+			//print f statement that writes one record to the file
+			filePW.printf("%d\t%s\t%f\t%d\t%f%n", borrowedItemID, borrowedItemName, borrowedItemPrice
+					, borrowedQuantity, borrowedOrderCost);
+			//set flag to found
+			fileFoundFlag = true;
+
+			//increment
+			recordCount++;
+
+			//close Scanner/file
+			filePW.close();
+		}//END of try block
+		//catch block
+		catch (IOException ex)
+		{
+			//error is try has problems
+			fileFoundFlag = false;
+		}//END of catch
+	}//END of writeOrder setter
+
+	//getters
+
+	//Start getter getfileFoundFlag
+	public boolean getFileFoundFlag()
+	{
+		return fileFoundFlag;
+	}//End getter getfileFoundFlag
+
+	//Start getter getfileName
+	public String getFileName()
+	{
+		return masterFileName;
+	}//End getter getfileName
+
+	//Start getter getRecordCount
+	public int getRecordCount()
+	{
+		return recordCount;
+	}//End getter getRecordCount
+}//end of supportive class
