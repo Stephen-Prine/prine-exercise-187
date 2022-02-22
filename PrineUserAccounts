@@ -1,0 +1,166 @@
+//AUTHOR: Stephen A. Prine
+//COURSE: CPT187
+/*PURPOSE:This part of the program is where the user/customer can make a account if they don't already have one via user name
+ * and password. It will store the information in a different location. It keeps track of the different user names, and doesn't let you make one if 
+ * one has already been used. 
+ */
+//START DATE: 2/16/22
+
+package edu.cpt187.prine.exercise6;
+
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+
+//Start UserAccounts class
+public class UserAccounts 
+{
+	//declare and initialize
+	private final int NOT_FOUND = -1;
+	private final int RESET_VALUE = 0;
+	private final int MAXIMUM_RECORDS = 50;
+	private String[] userNames = new String[MAXIMUM_RECORDS];
+	private String[] passwords = new String[MAXIMUM_RECORDS];
+	private String masterFileName = "";
+	private int recordCount = 0;
+	private int searchedIndex = 0;
+
+	//constructor
+	public UserAccounts(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;
+	}//end of constructor
+
+	//setters
+
+	//Start setter for setUserAccountArrays
+	public void setUserAccountArrays()
+	{
+		//try block
+		try 
+		{
+			recordCount = RESET_VALUE;
+			//create instance with instantiation statement
+			Scanner infile = new Scanner(new FileInputStream(masterFileName));
+
+			//repetition structure for record count
+			while(infile.hasNext() == true && recordCount < MAXIMUM_RECORDS)
+			{
+				userNames[recordCount] = infile.next();
+				passwords[recordCount] = infile.next();
+				recordCount++;
+			}//End of while loop
+			//close the scanner/file
+			infile.close();
+		}//End of try block
+		//catch block
+		catch(IOException ex)
+		{
+			recordCount = NOT_FOUND;
+		}//End of catch block
+	}//End setter for setUserAccountArrays
+
+	//Start setter for setSearchedIndex
+	public void setSearchedIndex(String borrowedUserName)
+	{
+		//assigns getSeqSearch to searchedIndex
+		searchedIndex = getSeqSearch(borrowedUserName);
+	}//End setter for setSearchedIndex
+
+	//Start setter setSearchedIndex : OVERLOADED
+	public void setSearchedIndex(String borrowedUserName, String borrowedPassword)
+	{
+		//assigns getSeqSearch to searchedIndex
+		searchedIndex= getSeqSearch(borrowedUserName);
+
+		//Start if selection structure
+		if (searchedIndex >= RESET_VALUE && getPasswordMatch(borrowedPassword) == false)
+		{
+			//assigns NOT_FOUND to searchedIndex
+			searchedIndex = NOT_FOUND;
+		}//End of if selection structure
+	}//End setter setSearchedIndex : OVERLOADED
+
+	//Start setter setWriteOneRecord
+	public void setWriteOneRecord(String borrowedUserName, String borrowedPassword)
+	{
+		//try block
+		try 
+		{
+			//instantiation statement
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, true));
+			//print statement to write borrowed values to the file
+			filePW.printf("%s\t%s%n",borrowedUserName, borrowedPassword);
+			
+			//Increment record count
+			recordCount++;
+			
+			//closes the PrintWriter/File
+			filePW.close();
+		} //End of try block
+		catch (IOException ex) 
+		{
+			recordCount = NOT_FOUND;
+		}//End of catch block
+	}//End setter setWriteOneRecord
+
+	//getters
+
+	//Start getter getSeqSearch
+	public int getSeqSearch(String borrowedBorrowedUserName)
+	{
+		//declare and initialize local variables
+		int localIndex = 0;
+		int localFound = NOT_FOUND;
+		//while loop repetition structure
+		while (localIndex < recordCount)
+		{
+			//Start if selection structure
+			if(userNames[localIndex].equalsIgnoreCase(borrowedBorrowedUserName))
+			{
+				localFound = localIndex;
+				localIndex = recordCount;
+			}//End of if selection
+			//Start else localIndex++
+			else
+			{
+				localIndex++;
+			}//End of else selection structure
+		}//End of while loop
+		return localFound;
+	}//End getter getSeqSearch
+
+	//Start getter getPasswordMatch
+	public boolean getPasswordMatch(String borrowedBorrowedPassword)
+	{
+		return (borrowedBorrowedPassword.equals(passwords[searchedIndex]) == true);
+	}//End getter getPasswordMatch
+
+	//Start getter getFileName
+	public String getFileName()
+	{
+		return masterFileName;
+	}//End getter getFileName
+
+	//Start getter getMaximumRecords
+	public int getMaximumRecords()
+	{
+		return MAXIMUM_RECORDS;
+	}//End getter getMaximumRecords
+
+	//Start getter getRecordCount
+	public int getRecordCount()
+	{
+		return recordCount;
+	}//End getter getRecordCount
+
+	//Start getter getSearchedIndex
+	public int getSearchedIndex()
+	{
+		return searchedIndex;
+	}//End getter getSearchedIndex
+
+}//End of UserAccounts Class
